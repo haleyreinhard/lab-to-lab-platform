@@ -1,29 +1,49 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Filter, Building2 } from 'lucide-react';
 
-// Mock data for demonstration
-const mockLabs = [
+const realLabs = [
   {
     id: 1,
-    name: "Advanced Diagnostics Lab",
-    location: "Boston, MA",
-    services: ["Clinical Testing", "Molecular Diagnostics", "Microbiology"],
-    certifications: ["CLIA", "CAP"],
-    image: "https://images.unsplash.com/photo-1581093588401-fbb62a02f120?auto=format&fit=crop&q=80&w=2940"
+    name: "Quest Diagnostics",
+    location: "Secaucus, NJ",
+    services: ["Clinical Testing", "Drug Testing", "COVID-19 Testing"],
+    certifications: ["CLIA", "CAP", "ISO 15189"],
+    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2940"
   },
   {
     id: 2,
-    name: "Precision Analytics",
-    location: "Seattle, WA",
-    services: ["Environmental Testing", "Chemical Analysis", "Water Quality"],
-    certifications: ["ISO 17025", "NELAC"],
-    image: "https://images.unsplash.com/photo-1581093804475-577d72e82e0f?auto=format&fit=crop&q=80&w=2940"
+    name: "LabCorp",
+    location: "Burlington, NC",
+    services: ["Diagnostic Testing", "Genomic Testing", "Clinical Trials"],
+    certifications: ["CLIA", "CAP"],
+    image: "https://images.unsplash.com/photo-1581093458791-9d58946cc0d8?auto=format&fit=crop&q=80&w=2940"
   },
-  // Add more mock labs as needed
+  {
+    id: 3,
+    name: "Mayo Clinic Laboratories",
+    location: "Rochester, MN",
+    services: ["Clinical Testing", "Research Testing", "Genetic Testing"],
+    certifications: ["CLIA", "CAP", "AABB"],
+    image: "https://images.unsplash.com/photo-1581093804475-577d72e82e0f?auto=format&fit=crop&q=80&w=2940"
+  }
 ];
 
 function Directory() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredLabs, setFilteredLabs] = useState(realLabs);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    
+    const filtered = realLabs.filter(lab => 
+      lab.name.toLowerCase().includes(term) ||
+      lab.location.toLowerCase().includes(term) ||
+      lab.services.some(service => service.toLowerCase().includes(term))
+    );
+    
+    setFilteredLabs(filtered);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -37,7 +57,7 @@ function Directory() {
               placeholder="Search labs by name, location, or services..."
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearch}
             />
           </div>
           <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
@@ -53,7 +73,7 @@ function Directory() {
 
       {/* Results Section */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockLabs.map((lab) => (
+        {filteredLabs.map((lab) => (
           <div key={lab.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <img src={lab.image} alt={lab.name} className="w-full h-48 object-cover" />
             <div className="p-6">
